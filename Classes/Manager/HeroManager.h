@@ -11,15 +11,18 @@
 
 #include "cocos2d.h"
 #include "DefaultSettings.h"
+#include "HeroPlay.h"
 USING_NS_CC;
 
 class HeroManager {
 private:
     HeroManager();
+    HeroPlay* m_hero;
     static HeroManager* m_instance;
     
 public:
     static HeroManager* getInstance();
+    void addHero(Layer* layer);
 };
 
 

@@ -20,3 +20,10 @@ HeroManager* HeroManager::getInstance() {
     }
     return m_instance;
 }
+
+void HeroManager::addHero(Layer* layer) {
+    if (!m_hero) {
+        m_hero = HeroPlay::create();
+        layer->addChild(m_hero);
+    }
+}

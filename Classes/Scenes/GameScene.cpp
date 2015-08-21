@@ -25,10 +25,37 @@ bool GameScene::init() {
     if (!Layer::init()) {
         return false;
     }
+    //加入背景
     BackgroundManager::getInstance()->addGameEntity(this);
     schedule([this](float delay){
         BackgroundManager::getInstance()->update(delay,this);
     }, "gameRun");
+
+    
+    // 获取事件分发器
+    auto dispatcher = Director::getInstance()->getEventDispatcher();
+    // 创建单点触摸监听器
+    auto listener = EventListenerTouchOneByOne::create();
+    // 让监听器绑定事件处理函数
+    listener->onTouchBegan = CC_CALLBACK_2(GameScene::onTouchBegan,this);
+    listener->onTouchMoved = CC_CALLBACK_2(GameScene::onTouchMoved,this);
+    listener->onTouchEnded = CC_CALLBACK_2(GameScene::onTouchEnded,this);
+    // 将事件监听器添加到事件调度器
+    dispatcher->addEventListenerWithSceneGraphPriority(listener,this);
     
     return true;
 }
+
+bool GameScene::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event){
+    return true;
+}
+
+
+void GameScene::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unused_event){
+    
+}
+
+void GameScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event){
+    
+}
+
