@@ -9,6 +9,7 @@
 #include "GameScene.h"
 #include "DefaultSettings.h"
 #include "BackgroudManager.h"
+#include "HeroManager.h"
 USING_NS_CC;
 
 
@@ -30,7 +31,9 @@ bool GameScene::init() {
     schedule([this](float delay){
         BackgroundManager::getInstance()->update(delay,this);
     }, "gameRun");
-
+    
+    //加入Hero
+    HeroManager::getInstance()->addHero(this);
     
     // 获取事件分发器
     auto dispatcher = Director::getInstance()->getEventDispatcher();
@@ -56,6 +59,12 @@ void GameScene::onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *unused_event
 }
 
 void GameScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event){
+    if (!pm_isStartGame) {
+        pm_isStartGame = true;
+        HeroManager::getInstance()->heroStart();
+    }else {
+        HeroManager::getInstance()->changeDirection();
+    }
     
 }
 

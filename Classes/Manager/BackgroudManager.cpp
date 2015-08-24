@@ -53,15 +53,8 @@ void BackgroundManager::update(float delay, Layer* layer) {
     }
 }
 
-void BackgroundManager::updateLevel(int level){
-    switch (level) {
-        case 1:
-            <#statements#>
-            break;
-            
-        default:
-            break;
-    }
+void BackgroundManager::updateLevel(){
+    m_speedLevel += 1;
 }
 
 BackgroundManager* BackgroundManager::getInstance() {

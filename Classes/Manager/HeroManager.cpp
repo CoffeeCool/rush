@@ -27,3 +27,17 @@ void HeroManager::addHero(Layer* layer) {
         layer->addChild(m_hero);
     }
 }
+
+void HeroManager::heroStart() {
+    if (m_hero) {
+        m_hero->scheduleUpdate();
+    }
+}
+
+void HeroManager::changeDirection() {
+    if (m_hero) {
+        m_hero->changeDirection();
+    }
+}
+
+

@@ -42,9 +42,9 @@
 #pragma mark 速度
 #define DEFALUT_SPEEDX_INIT 0   //默认X轴起始速度
 #define DEFALUT_SPEEDY_INIT 0   //默认Y轴其实速度
-#define DEFAULT_ACCELERATIONX 2 //默认X轴加速度
+#define DEFAULT_ACCELERATIONX 0.3 //默认X轴加速度
 #define DEFAULT_ACCELERATIONY 2 //默认Y轴加速度
-#define MAX_HERO_SPEEDX 10   //HERO最大X轴速度的绝对值
+#define MAX_HERO_SPEEDX 6   //HERO最大X轴速度的绝对值
 #define STAGE_1_SPEED_MAX 10 //第一阶段速度峰值
 #define STAGE_2_SPEED_MAX 15 //第二阶段速度峰值
 #define STAGE_3_SPEED_MAX 20 //第三阶段速度峰值

@@ -23,6 +23,8 @@ private:
 public:
     static HeroManager* getInstance();
     void addHero(Layer* layer);
+    void heroStart();
+    void changeDirection();
 };
 
 
