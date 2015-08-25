@@ -25,6 +25,8 @@ public:
     void addHero(Layer* layer);
     void heroStart();
     void changeDirection();
+    void changeRotaion();
+    void levelUp();
 };
 
 

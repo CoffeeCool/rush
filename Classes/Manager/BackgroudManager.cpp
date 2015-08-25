@@ -7,6 +7,7 @@
 //
 
 #include "BackgroudManager.h"
+#include "HeroManager.h"
 
 BackgroundManager* BackgroundManager::sm_instance;
 
@@ -20,8 +21,9 @@ void BackgroundManager::addStartEntity(cocos2d::Layer *layer){
 }
 
 void BackgroundManager::addGameEntity(cocos2d::Layer *layer) {
-    m_speed = BOARD_SPEED;
-    m_heightForNewBoard = 0;//初始化高度阈值
+    m_level = 1;
+    m_backgroundSpeed = 0;
+    m_heightForNewBoard = 0;//初始化Board距离
     m_height = 0;//
     addBackground(layer);
     addHouse(layer);
@@ -37,24 +39,72 @@ void BackgroundManager::addBoard(cocos2d::Layer *layer) {
 }
 
 void BackgroundManager::update(float delay, Layer* layer) {
-    m_heightForNewBoard += m_speed;
-    m_height += m_speed;
-    //300px新增一个障碍
-    if (m_heightForNewBoard%ADD_BOARD_PER_PX_DIVIDED_BY_3 == 0) {
+    
+    int addBoardPerPXDividedBy3;
+    switch (m_level) {
+        case 1:
+            m_backgroundSpeed = BACKGROUND_SPEED_1;
+            addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_1;
+            break;
+        case 2:
+            m_backgroundSpeed = BACKGROUND_SPEED_2;
+            addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_2;
+            break;
+        case 3:
+            m_backgroundSpeed = BACKGROUND_SPEED_3;
+            addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_3;
+            break;
+        case 4:
+            m_backgroundSpeed = BACKGROUND_SPEED_4;
+            addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_4;
+            break;
+        case 5:
+            m_backgroundSpeed = BACKGROUND_SPEED_5;
+            addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_5;
+            break;
+        default:
+            break;
+    }
+    m_heightForNewBoard += m_backgroundSpeed;
+    m_height += m_backgroundSpeed;
+    
+    
+    //新增一个障碍
+    
+    if (m_heightForNewBoard%addBoardPerPXDividedBy3 == 0) {
         m_heightForNewBoard = 0;//归零
         addBoard(layer);
     }
-    m_background_1->setPositionY(m_background_1->getPositionY() - m_speed);
-    m_background_2->setPositionY(m_background_2->getPositionY() - m_speed);
+    m_background_1->setPositionY(m_background_1->getPositionY() - m_backgroundSpeed);
+    m_background_2->setPositionY(m_background_2->getPositionY() - m_backgroundSpeed);
     if (m_background_1->getPositionY() < -(m_background_1->getContentSize().height)*(VISIBLE_SIZE_WIDTH/DEFAULT_MAX_SCREEN_WIDTH)) {
         m_background_1->setPositionY((m_background_1->getContentSize().height)*(VISIBLE_SIZE_WIDTH/DEFAULT_MAX_SCREEN_WIDTH));
     }else if (m_background_2->getPositionY() < -(m_background_2->getContentSize().height*(VISIBLE_SIZE_WIDTH/DEFAULT_MAX_SCREEN_WIDTH))) {
         m_background_2->setPositionY((m_background_1->getContentSize().height)*(VISIBLE_SIZE_WIDTH/DEFAULT_MAX_SCREEN_WIDTH));
     }
+    
+    
+    if (m_height > LEVELUP_HEIGHT_1 && m_height <= LEVELUP_HEIGHT_2) {
+        levelUp();
+    }else if (m_height > LEVELUP_HEIGHT_2 && m_height <= LEVELUP_HEIGHT_3) {
+        levelUp();
+    }else if (m_height > LEVELUP_HEIGHT_3 && m_height <= LEVELUP_HEIGHT_4) {
+        levelUp();
+    }else if (m_height > LEVELUP_HEIGHT_4 && m_height <= LEVELUP_HEIGHT_5) {
+        levelUp();
+    }
 }
 
-void BackgroundManager::updateLevel(){
-    m_speedLevel += 1;
+void BackgroundManager::levelUp(){
+    if (m_level >= 5) {
+        return;
+    }
+    m_level++;
+    for (int i = 0; i < m_mapEntities.size(); i++) {
+        MapEntity* entity = m_mapEntities[i];
+        entity->levelUp();
+    }
+    HeroManager::getInstance()->levelUp();
 }
 
 BackgroundManager* BackgroundManager::getInstance() {
@@ -167,7 +217,6 @@ MapEntity* BackgroundManager::getCrashEntity(cocos2d::Rect heroRect, int color){
             return entity;
         }
     }
-
-    
+    return nullptr;
 }
 

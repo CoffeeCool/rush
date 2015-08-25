@@ -20,19 +20,9 @@ MapEntity* MapEntity::create(int color, int width)
     return nullptr;
 }
 
-MapEntity::MapEntity():
-m_boardSpeed(0),
-m_boardWidth(0),
-m_isLastOne(0)
-{
-    
-}
-
-MapEntity::~MapEntity()
-{
-}
 
 bool MapEntity::init(int color, int width) {
+    m_level = 1;
     m_boardColor = color;
     m_boardWidth = width;
     m_boardSpeed = 5;
@@ -84,8 +74,33 @@ bool MapEntity::init(int color, int width) {
     return true;
 }
 
+void MapEntity::levelUp() {
+    if (m_level >= 5) {
+        return;
+    }
+    m_level++;
+}
 
 void MapEntity::update(float delay) {
+    switch (m_level) {
+        case 1:
+            m_boardSpeed = MAX_STAGE_SPEEDY_1;
+            break;
+        case 2:
+            m_boardSpeed = MAX_STAGE_SPEEDY_2;
+            break;
+        case 3:
+            m_boardSpeed = MAX_STAGE_SPEEDY_3;
+            break;
+        case 4:
+            m_boardSpeed = MAX_STAGE_SPEEDY_4;
+            break;
+        case 5:
+            m_boardSpeed = MAX_STAGE_SPEEDY_5;
+            break;
+        default:
+            break;
+    }
     setPosition(this->getPositionX(), this->getPositionY() - m_boardSpeed);
     if (getPositionY() <= 0) {
         this->removeFromParent();

@@ -28,12 +28,12 @@ private:
     CC_SYNTHESIZE(Sprite*, m_house, House);
     CC_SYNTHESIZE(Sprite*, m_rank, Rank);
     CC_SYNTHESIZE(Sprite*, m_music, Music);
-    CC_SYNTHESIZE(int, m_speed, Speed);
+    CC_SYNTHESIZE(int, m_backgroundSpeed, BackgroundSpeed);
     
     std::vector<MapEntity*> m_mapEntities;//board容器
     int m_heightForNewBoard;//高度阈值，达到条件后新增Board
     int m_height;//地图滚动的高度
-    int m_speedLevel = 0; //速度等级，等级越高速度越高
+    int m_level;//难度
     void addHouse(Layer* layer);
     void addBackground(Layer* layer);
     void addStartButton(Layer* layer);//开始游戏
@@ -47,7 +47,7 @@ public:
     void addGameEntity(Layer* layer);//添加游戏界面实体
     void addBoard(Layer* layer);
     void update(float delay, Layer* layer);
-    void updateLevel();
+    void levelUp();
     MapEntity* getCrashEntity(Rect heroRect, int color);
 };
 

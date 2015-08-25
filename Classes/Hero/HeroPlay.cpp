@@ -11,6 +11,8 @@
 USING_NS_CC;
 
 bool HeroPlay::init() {
+    m_level = 1;
+    m_isStart = false;
     m_scale = 0.5*VISIBLE_SIZE_WIDTH/DEFAULT_IPHONE6_SCREEN_WIDTH;
     m_type = (int)(CCRANDOM_0_1()*4);
     m_accelerationX = DEFAULT_ACCELERATIONX;
@@ -24,8 +26,52 @@ bool HeroPlay::init() {
 }
 
 void HeroPlay::changeDirection() {
+
+
     m_direction = !m_direction;
     m_accelerationX = -m_accelerationX;
+    
+    changeRotation();
+}
+
+void HeroPlay::changeRotation() {
+    float rotationTime;
+    //通过游戏难度调整旋转速度
+    switch (m_level) {
+        case 1:
+            rotationTime = ROTATION_TIME_1;
+            break;
+        case 2:
+            rotationTime = ROTATION_TIME_2;
+            break;
+        case 3:
+            rotationTime = ROTATION_TIME_3;
+            break;
+        case 4:
+            rotationTime = ROTATION_TIME_4;
+            break;
+        case 5:
+            rotationTime = ROTATION_TIME_5;
+            break;
+        default:
+            break;
+    }
+    if (m_isStart) {
+        if (m_direction) {
+            this->runAction(RotateTo::create(rotationTime, 30));
+        }else {
+            this->runAction(RotateTo::create(rotationTime, -30));
+        }
+    }else {
+        this->runAction(RotateTo::create(rotationTime, 15));
+    }
+}
+
+void HeroPlay::levelUp() {
+    if (m_level >= 5) {
+        return;
+    }
+    m_level++;
 }
 
 void HeroPlay::update(float delay) {
@@ -40,10 +86,34 @@ void HeroPlay::update(float delay) {
         this->setPositionX(posX);
     }
     
+    float heroSpeedX;
+    //通过游戏难度调整平移速度
+    switch (m_level) {
+        case 1:
+            heroSpeedX = MAX_HERO_SPEEDX_1;
+            if (m_accelerationX > 0) {
+            }
+            break;
+        case 2:
+            heroSpeedX = MAX_HERO_SPEEDX_2;
+            break;
+        case 3:
+            heroSpeedX = MAX_HERO_SPEEDX_3;
+            break;
+        case 4:
+            heroSpeedX = MAX_HERO_SPEEDX_4;
+            break;
+        case 5:
+            heroSpeedX = MAX_HERO_SPEEDX_5;
+            break;
+        default:
+            break;
+    }
+    
     //加速度
     if (m_direction) {
         if (m_speedX > 0) {
-            if (std::fabsf(m_speedX) <= MAX_HERO_SPEEDX) {
+            if (std::fabsf(m_speedX) <= heroSpeedX) {
                 m_speedX = m_accelerationX + m_speedX;
             }
         }else {
@@ -51,15 +121,13 @@ void HeroPlay::update(float delay) {
         }
     }else {
         if (m_speedX < 0) {
-            if (std::fabsf(m_speedX) <= MAX_HERO_SPEEDX) {
+            if (std::fabsf(m_speedX) <= heroSpeedX) {
                 m_speedX = m_accelerationX + m_speedX;
             }
         }else {
             m_speedX = m_accelerationX + m_speedX;
         }
     }
-    
-    
     this->setPositionX(posX + m_speedX);
 }
 
