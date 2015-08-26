@@ -54,18 +54,18 @@
 #define ADD_BOARD_PER_PX_DIVIDED_BY_3_5 60
 
 
-#define LEVELUP_HEIGHT_1 100
-#define LEVELUP_HEIGHT_2 250
-#define LEVELUP_HEIGHT_3 400
-#define LEVELUP_HEIGHT_4 550
-#define LEVELUP_HEIGHT_5 700
+#define LEVELUP_HEIGHT_1 2000
+#define LEVELUP_HEIGHT_2 5000
+#define LEVELUP_HEIGHT_3 10000
+#define LEVELUP_HEIGHT_4 15000
+#define LEVELUP_HEIGHT_5 20000
 
 
 #define MAX_HERO_SPEEDX_1 6   //HERO最大X轴速度的绝对值
-#define MAX_HERO_SPEEDX_2 7
-#define MAX_HERO_SPEEDX_3 8
-#define MAX_HERO_SPEEDX_4 9
-#define MAX_HERO_SPEEDX_5 10
+#define MAX_HERO_SPEEDX_2 10
+#define MAX_HERO_SPEEDX_3 15
+#define MAX_HERO_SPEEDX_4 20
+#define MAX_HERO_SPEEDX_5 25
 
 #define BACKGROUND_SPEED_1 3
 #define BACKGROUND_SPEED_2 4
@@ -73,18 +73,21 @@
 #define BACKGROUND_SPEED_4 6
 #define BACKGROUND_SPEED_5 7
 
-#define MAX_STAGE_SPEEDY_1 10 //第一阶段速度峰值
-#define MAX_STAGE_SPEEDY_2 15 //第二阶段速度峰值
-#define MAX_STAGE_SPEEDY_3 20 //第三阶段速度峰值
-#define MAX_STAGE_SPEEDY_4 25 //第四阶段速度峰值
-#define MAX_STAGE_SPEEDY_5 30 //第五阶段速度峰值
+#define MAX_STAGE_SPEEDY_1 8 //第一阶段速度峰值
+#define MAX_STAGE_SPEEDY_2 11 //第二阶段速度峰值
+#define MAX_STAGE_SPEEDY_3 14 //第三阶段速度峰值
+#define MAX_STAGE_SPEEDY_4 18 //第四阶段速度峰值
+#define MAX_STAGE_SPEEDY_5 22 //第五阶段速度峰值
 
 #define ROTATION_TIME_1 0.4   //旋转方向
-#define ROTATION_TIME_2 0.32
-#define ROTATION_TIME_3 0.26
-#define ROTATION_TIME_4 0.20
-#define ROTATION_TIME_5 0.15
+#define ROTATION_TIME_2 0.2
+#define ROTATION_TIME_3 0.1
+#define ROTATION_TIME_4 0.1
+#define ROTATION_TIME_5 0.1
 
+#define WRONG 1
+#define RIGHT 2
+#define NOTHING 0
 
 enum ColorType{
     green = 0,

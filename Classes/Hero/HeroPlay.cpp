@@ -8,6 +8,7 @@
 
 #include "HeroPlay.h"
 #include "DefaultSettings.h"
+#include "BackgroudManager.h"
 USING_NS_CC;
 
 bool HeroPlay::init() {
@@ -54,6 +55,7 @@ void HeroPlay::changeRotation() {
             rotationTime = ROTATION_TIME_5;
             break;
         default:
+            rotationTime = ROTATION_TIME_1;
             break;
     }
     if (m_isStart) {
@@ -73,6 +75,8 @@ void HeroPlay::levelUp() {
     }
     m_level++;
 }
+
+
 
 void HeroPlay::update(float delay) {
     auto posX = this->getPositionX();
@@ -107,6 +111,8 @@ void HeroPlay::update(float delay) {
             heroSpeedX = MAX_HERO_SPEEDX_5;
             break;
         default:
+            heroSpeedX = MAX_HERO_SPEEDX_1;
+
             break;
     }
     
@@ -129,6 +135,29 @@ void HeroPlay::update(float delay) {
         }
     }
     this->setPositionX(posX + m_speedX);
+    
+    int msg = BackgroundManager::getInstance()->getCrashEntity(boundingBox(), m_type);
+    
+    if(msg == WRONG){
+        BackgroundManager::getInstance()->stopAllActions();
+        this->unscheduleUpdate();
+    }else if (msg == RIGHT) {
+        changeType();
+    }
+    
 }
 
+void HeroPlay::changeColor() {
+    int temp = m_type;
+    m_type = (int)(CCRANDOM_0_1()*4) + 1;
+    if (m_type == temp) {
+        changeColor();
+    }
+}
+
+void HeroPlay::changeType() {
+    changeColor();
+    std::string str = StringUtils::format("hero/hero%d.png", m_type);
+    this->setTexture(str);
+}
 

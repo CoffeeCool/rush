@@ -17,8 +17,7 @@
 USING_NS_CC;
 class BackgroundManager {
 private:
-    
-    BackgroundManager();
+
     static BackgroundManager* sm_instance;
     CC_SYNTHESIZE(Sprite*, m_title, Title);
     CC_SYNTHESIZE(Sprite*, m_background_1, Background_1);
@@ -31,15 +30,21 @@ private:
     CC_SYNTHESIZE(int, m_backgroundSpeed, BackgroundSpeed);
     
     std::vector<MapEntity*> m_mapEntities;//board容器
-    int m_heightForNewBoard;//高度阈值，达到条件后新增Board
     int m_height;//地图滚动的高度
+    int m_heightForNewBoard;
     int m_level;//难度
+    float m_entitySpeed;
+    bool stopAllAction = false;
     void addHouse(Layer* layer);
     void addBackground(Layer* layer);
     void addStartButton(Layer* layer);//开始游戏
     void addFunctionButton(Layer* layer);
     void addDisplayHeros(Layer* layer);
     void addTitle(Layer* layer);
+    void levelUpByHeight();
+    void scrollBackground();//滚动背景地图
+    int getSpeedByLevel();
+    
 public:
     
     static BackgroundManager* getInstance();
@@ -48,7 +53,10 @@ public:
     void addBoard(Layer* layer);
     void update(float delay, Layer* layer);
     void levelUp();
-    MapEntity* getCrashEntity(Rect heroRect, int color);
+    void stopAllActions();
+    void startEntity();
+    void remove(MapEntity* removeEntity);
+    int getCrashEntity(Rect heroRect, int color);
 };
 
 #endif /* defined(__Interaction__BackgroudManager__) */

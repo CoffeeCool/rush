@@ -23,6 +23,8 @@ private:
     bool m_direction = true;//true为右,false为左
     virtual bool init();
     virtual void update(float delay);
+    void changeType();
+    void changeColor();
 public:
     CREATE_FUNC(HeroPlay);
     void changeDirection();

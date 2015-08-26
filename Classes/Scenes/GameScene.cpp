@@ -31,7 +31,7 @@ bool GameScene::init() {
     schedule([this](float delay){
         BackgroundManager::getInstance()->update(delay,this);
     }, "gameRun");
-    
+    BackgroundManager::getInstance()->stopAllActions();
     //加入Hero
     HeroManager::getInstance()->addHero(this);
     
@@ -62,6 +62,8 @@ void GameScene::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event
     if (!pm_isStartGame) {
         pm_isStartGame = true;
         HeroManager::getInstance()->heroStart();
+        BackgroundManager::getInstance()->startEntity();
+        
     }else {
         HeroManager::getInstance()->changeDirection();
     }

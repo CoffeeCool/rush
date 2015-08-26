@@ -8,6 +8,7 @@
 
 #include "MapEntity.h"
 #include "DefaultSettings.h"
+#include "BackgroudManager.h"
 USING_NS_CC;
 MapEntity* MapEntity::create(int color, int width)
 {
@@ -20,58 +21,43 @@ MapEntity* MapEntity::create(int color, int width)
     return nullptr;
 }
 
-
 bool MapEntity::init(int color, int width) {
     m_level = 1;
     m_boardColor = color;
     m_boardWidth = width;
     m_boardSpeed = 5;
+    initWithFileByColor(color, width);
+    scheduleUpdate();
+    return true;
+}
+
+void MapEntity::initWithFileByColor(int color, int width) {
+    std::string sColor;
     switch (color) {
-        case green: {
-            this->initWithFile("texture/green.png");
-            Texture2D* tex = Director::getInstance()->getTextureCache()->addImage("texture/green.png");
-            Texture2D::TexParams tp = {GL_LINEAR, GL_LINEAR, GL_REPEAT,GL_REPEAT};
-            tex->setTexParameters(tp);
-            setTexture(tex);
-            setTextureRect(Rect(0,0,width, 50));
-        }
-            
+        case green:
+            sColor = "green";
             break;
         case stone:
-        {
-            this->initWithFile("texture/stone.png");
-            Texture2D* tex = Director::getInstance()->getTextureCache()->addImage("texture/stone.png");
-            Texture2D::TexParams tp = {GL_LINEAR, GL_LINEAR, GL_REPEAT,GL_REPEAT};
-            tex->setTexParameters(tp);
-            setTexture(tex);
-            setTextureRect(Rect(0,0,width, 50));
-        }
+            sColor = "stone";
             break;
         case purple:
-        {
-            this->initWithFile("texture/purple.png");
-            Texture2D* tex = Director::getInstance()->getTextureCache()->addImage("texture/purple.png");
-            Texture2D::TexParams tp = {GL_LINEAR, GL_LINEAR, GL_REPEAT,GL_REPEAT};
-            tex->setTexParameters(tp);
-            setTexture(tex);
-            setTextureRect(Rect(0,0,width, 50));
-        }
+            sColor = "purple";
             break;
         case yellow:
-        {
-            this->initWithFile("texture/yellow.png");
-            Texture2D* tex = Director::getInstance()->getTextureCache()->addImage("texture/yellow.png");
-            Texture2D::TexParams tp = {GL_LINEAR, GL_LINEAR, GL_REPEAT,GL_REPEAT};
-            tex->setTexParameters(tp);
-            setTexture(tex);
-            setTextureRect(Rect(0,0,width, 50));
-        }
+            sColor = "yellow";
             break;
         default:
+            sColor = "green";
             break;
     }
-    this->scheduleUpdate();
-    return true;
+    std::string str = StringUtils::format("texture/%s.png",sColor.c_str());
+    this->initWithFile(str);
+    Texture2D* tex = Director::getInstance()->getTextureCache()->addImage(str);
+    Texture2D::TexParams tp = {GL_LINEAR, GL_LINEAR, GL_REPEAT,GL_REPEAT};
+    tex->setTexParameters(tp);
+    setTexture(tex);
+    setTextureRect(Rect(0,0,width, 50));
+
 }
 
 void MapEntity::levelUp() {
@@ -81,28 +67,36 @@ void MapEntity::levelUp() {
     m_level++;
 }
 
-void MapEntity::update(float delay) {
-    switch (m_level) {
+float getBoardSpeedByLevel(int level) {
+    switch (level) {
         case 1:
-            m_boardSpeed = MAX_STAGE_SPEEDY_1;
+            return MAX_STAGE_SPEEDY_1;
             break;
         case 2:
-            m_boardSpeed = MAX_STAGE_SPEEDY_2;
+            return MAX_STAGE_SPEEDY_2;
             break;
         case 3:
-            m_boardSpeed = MAX_STAGE_SPEEDY_3;
+            return MAX_STAGE_SPEEDY_3;
             break;
         case 4:
-            m_boardSpeed = MAX_STAGE_SPEEDY_4;
+            return MAX_STAGE_SPEEDY_4;
             break;
         case 5:
-            m_boardSpeed = MAX_STAGE_SPEEDY_5;
+            return MAX_STAGE_SPEEDY_5;
             break;
         default:
+            return MAX_STAGE_SPEEDY_1;
             break;
     }
+}
+
+
+void MapEntity::update(float delay) {
+    m_boardSpeed = getBoardSpeedByLevel(m_level);
     setPosition(this->getPositionX(), this->getPositionY() - m_boardSpeed);
     if (getPositionY() <= 0) {
+        BackgroundManager::getInstance()->remove(this);
         this->removeFromParent();
+
     }
 }

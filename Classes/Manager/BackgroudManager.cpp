@@ -40,6 +40,10 @@ void BackgroundManager::addBoard(cocos2d::Layer *layer) {
 
 void BackgroundManager::update(float delay, Layer* layer) {
     
+    if (stopAllAction) {
+        return;
+    }
+    
     int addBoardPerPXDividedBy3;
     switch (m_level) {
         case 1:
@@ -63,6 +67,8 @@ void BackgroundManager::update(float delay, Layer* layer) {
             addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_5;
             break;
         default:
+            m_backgroundSpeed = BACKGROUND_SPEED_1;
+            addBoardPerPXDividedBy3 = ADD_BOARD_PER_PX_DIVIDED_BY_3_1;
             break;
     }
     m_heightForNewBoard += m_backgroundSpeed;
@@ -115,8 +121,7 @@ BackgroundManager* BackgroundManager::getInstance() {
     return sm_instance;
 }
 
-BackgroundManager::BackgroundManager() {
-}
+
 
 void BackgroundManager::addHouse(cocos2d::Layer* layer) {
     m_house = Sprite::create("background/house.png");
@@ -140,7 +145,7 @@ void BackgroundManager::addBackground(cocos2d::Layer *layer) {
 }
 
 void BackgroundManager::addStartButton(cocos2d::Layer *layer) {
-
+    
     m_startCloud = Sprite::create("background/startCloud.png");
     m_startTriangle = Sprite::create("background/startTriangle.png");
     //        m_startCloud->setScale(m_visibaleSize.width/1080);
@@ -155,7 +160,7 @@ void BackgroundManager::addStartButton(cocos2d::Layer *layer) {
     listener->onTouchBegan = [this](Touch* t, Event* e){
         auto position = t->getLocation();
         if (this->m_startTriangle->getBoundingBox().containsPoint(position)) {
-
+            
             CCLOG("Touched!!!");
         }
         else {
@@ -207,16 +212,47 @@ void BackgroundManager::addDisplayHeros(cocos2d::Layer *layer) {
 }
 
 
-MapEntity* BackgroundManager::getCrashEntity(cocos2d::Rect heroRect, int color){
+int BackgroundManager::getCrashEntity(cocos2d::Rect heroRect, int color){
     for (int i = 0; i < m_mapEntities.size(); i++) {
         MapEntity* entity = m_mapEntities[i];
-        Rect rect;
-        rect.size = Size(entity->getBoardWidth(),50);
-        rect.origin = entity->getPosition();
+        Rect rect = entity->getBoundingBox();
         if (rect.intersectsRect(heroRect) && color != entity->getBoardColor()) {
-            return entity;
+            return WRONG;
+        }
+        if (rect.intersectsRect(heroRect) && color == entity->getBoardColor() ) {
+            return RIGHT;
         }
     }
-    return nullptr;
+    return NOTHING;
 }
 
+
+void BackgroundManager::stopAllActions() {
+    stopAllAction = true;
+    for (int i = 0; i < m_mapEntities.size(); i++) {
+        MapEntity* entity = m_mapEntities[i];
+        entity->unscheduleUpdate();
+        
+    }
+}
+
+void BackgroundManager::startEntity() {
+    stopAllAction = false;
+    for (int i = 0; i < m_mapEntities.size(); i++) {
+        MapEntity* entity = m_mapEntities[i];
+        entity->scheduleUpdate();
+    }
+}
+
+
+
+void BackgroundManager::remove(MapEntity *removeEntity) {
+    
+    for (int i = 0; i < m_mapEntities.size(); i++) {
+        MapEntity* entity = m_mapEntities[i];
+        if (entity == removeEntity) {
+            m_mapEntities.erase(std::find(m_mapEntities.begin(), m_mapEntities.end(), entity));
+        }
+    }
+    
+}
